@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  lab:
+    image: imu_utils
+    build:
+      context: docker/lab
+      dockerfile: lab.dockerfile
+    restart: no
+    privileged: true
+    ports:
+      - "7700:7700"
+
+    environment:
+      - DISPLAY=:10.0
+      - PORT=7700
+    volumes:
+      - ${SRC_PATH}:/ws/src/
+    tty: true
