@@ -77,7 +77,9 @@ RUN apt-get update && \
 # Install pip dependencies
 RUN apt-get update && \
     apt-get install -y \
-    python3-pip && \
+    python3-pip \ 
+    ros-${ROS_VERSION}-rviz-imu-plugin \
+    ros-${ROS_VERSION}-serial && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     python3 -m pip install evo packaging

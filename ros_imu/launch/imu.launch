@@ -1,0 +1,12 @@
+<launch>
+
+    <arg name="type" default="normal" doc="type [normal, modbus]" />
+
+    <node pkg="ros_imu" type="imu_node" name="imu_node" output="screen">
+        <param name="port" type="string" value="/dev/ttyUSB0" />
+        <param name="baudrate" type="int" value="9600" />
+    </node>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find ros_imu)/rviz/imu.rviz" required="true" />
+
+</launch>

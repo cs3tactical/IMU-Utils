@@ -1,14 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-dt = np.loadtxt('../../data/data_imu_gyr_t.txt')
-data_x = np.loadtxt('../../data/data_imu_gyr_x.txt')
-data_y = np.loadtxt('../../data/data_imu_gyr_y.txt')
-data_z = np.loadtxt('../../data/data_imu_gyr_z.txt')
+dt = np.loadtxt('../../data/data_im10a_gyr_t.txt')
+data_x = np.loadtxt('../../data/data_im10a_gyr_x.txt')
+data_y = np.loadtxt('../../data/data_im10a_gyr_y.txt')
+data_z = np.loadtxt('../../data/data_im10a_gyr_z.txt')
 
-data_sim_x = np.loadtxt('../../data/data_imu_sim_gyr_x.txt')
-data_sim_y = np.loadtxt('../../data/data_imu_sim_gyr_y.txt')
-data_sim_z = np.loadtxt('../../data/data_imu_sim_gyr_z.txt')
+data_sim_x = np.loadtxt('../../data/data_im10a_sim_gyr_x.txt')
+data_sim_y = np.loadtxt('../../data/data_im10a_sim_gyr_y.txt')
+data_sim_z = np.loadtxt('../../data/data_im10a_sim_gyr_z.txt')
 
 plt.figure()
 plt.loglog(dt, data_x, label='x')

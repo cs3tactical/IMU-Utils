@@ -2,6 +2,8 @@
 
 ### A ROS toolkit for imu data simulation, zero-drift calibration and their joint simulation.
 
+![cover](./assets/cover)
+
 ![ros](./assets/ros.svg)
 ![cpp](./assets/cpp.svg)
 ![python](./assets/python.svg)
@@ -39,7 +41,7 @@
 
 **or Docker**:
 
-- [Docker](https://docs.docker.com/get-started/get-docker/)
+- [Docker Enginer](https://docs.docker.com/engine/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/) 2.X 
 - [VS Code](https://code.visualstudio.com/) (Recommend)
     - Docker
@@ -61,6 +63,7 @@ bash start_dev.sh
 cd /ws
 catkin_make -DCATKIN_WHITELIST_PACKAGES="code_utils" 
 catkin_make -DCATKIN_WHITELIST_PACKAGES="imu_utils"
+catkin_make -DCATKIN_WHITELIST_PACKAGES="ros_imu"
 catkin_make
 ```
 
@@ -93,7 +96,22 @@ python3 draw_allan.py
 
 #### Real IMU
 
+If you cannot find `/dev/ttyUSB0`, this page may help: https://askubuntu.com/questions/1403705/dev-ttyusb0-not-present-in-ubuntu-22-04
+
 ```bash
 cd /ws
-
+source devel/setup.bash
+roslaunch imu_utils im10a.launch
 ```
+
+```bash
+cd /ws
+source devel/setup.bash
+roslaunch ros_imu imu.launch
+```
+
+Then just waiting for `imu_utils` to finish
+
+![](./assets/imu.png)
+
+![](./assets/imusim.png)
