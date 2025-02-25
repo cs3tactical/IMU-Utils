@@ -2,7 +2,7 @@ FROM ubuntu:20.04
 
 # Environment variables
 ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Asia/Beijing
+ENV TZ=Asia/Jerusalem
 
 # Arguments for build
 ARG ROS_VERSION=noetic
@@ -34,7 +34,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install ROS
-RUN sh -c 'echo "deb http://mirrors.ustc.edu.cn/ros/ubuntu/ `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list' && \
+RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu`lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list' && \
     curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - && \
     apt-get update && \
     apt-get install -y \

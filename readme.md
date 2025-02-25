@@ -49,7 +49,7 @@
     - C/C++ Extension Pack
 
 ```bash
-chmox +x start_dev.sh
+chmod +x start_dev.sh
 bash start_dev.sh
 ```
 

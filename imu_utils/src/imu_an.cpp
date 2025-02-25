@@ -51,12 +51,16 @@ imu_callback( const sensor_msgs::ImuConstPtr& imu_msg )
     {
         start_t = time;
         start   = false;
+        std::cout << time << std::endl;
     }
     else
     {
         double time_min = ( time - start_t ) / 60;
-        if ( time_min > max_time_min )
+        std::cout << "time_min:" << time_min << "max_time_min" << max_time_min << std::endl;
+        if ( time_min > max_time_min ){
             end = true;
+            std::cout << end << std::endl;
+        }
     }
 }
 
