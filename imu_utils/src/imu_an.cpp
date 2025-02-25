@@ -51,15 +51,15 @@ imu_callback( const sensor_msgs::ImuConstPtr& imu_msg )
     {
         start_t = time;
         start   = false;
-        std::cout << time << std::endl;
+        // std::cout << time << std::endl;
     }
     else
     {
         double time_min = ( time - start_t ) / 60;
-        std::cout << "time_min:" << time_min << "max_time_min" << max_time_min << std::endl;
+        std::cout << "time_min: " << time_min << " >? max_time_min: " << max_time_min << std::endl;
         if ( time_min > max_time_min ){
             end = true;
-            std::cout << end << std::endl;
+            std::cout << "end" << std::endl;
         }
     }
 }
@@ -205,6 +205,145 @@ writeYAML( const std::string data_path,
     fs.release( );
 }
 
+void
+writeYAMLCB( const std::string data_path,
+           const std::string sensor_name,
+           const imu::FitAllanGyr& gyr_x,
+           const imu::FitAllanGyr& gyr_y,
+           const imu::FitAllanGyr& gyr_z,
+           const imu::FitAllanAcc& acc_x,
+           const imu::FitAllanAcc& acc_y,
+           const imu::FitAllanAcc& acc_z )
+{
+    cv::FileStorage fs( data_path + "imu.yaml", cv::FileStorage::WRITE );
+
+    // fs << "#imu parameters";
+
+    fs << "imu_topic"
+       << "/imu/data";
+    
+    // fs << "# imu_topic"
+    //    << "/filtered_imu";
+
+    fs << "is_same_acc_n" << 1;
+    fs << std::string( "acc_n" ) << ( acc_x.getWhiteNoise( ) + acc_y.getWhiteNoise( ) + acc_z.getWhiteNoise( ) ) / 3;
+    fs << "is_same_gyr_n" << 1;
+    fs << std::string( "gyr_n" ) << ( gyr_x.getWhiteNoise( ) + gyr_y.getWhiteNoise( ) + gyr_z.getWhiteNoise( ) ) / 3;
+    fs << "is_same_acc_w" << 1;
+    fs << std::string( "acc_w" ) << ( acc_x.getBiasInstability( ) + acc_y.getBiasInstability( ) + acc_z.getBiasInstability( ) ) / 3;
+    fs << "is_same_gyr_w" << 1;
+    fs << std::string( "gyr_w" ) << ( gyr_x.getBiasInstability( ) + gyr_y.getBiasInstability( ) + gyr_z.getBiasInstability( ) ) / 3;
+
+    fs << std::string( "acc_n_x" ) << acc_x.getWhiteNoise( ); // << "        # accelerometer measurement noise standard deviation.";
+    // acc_n_x: 0.0037050385701155966        # accelerometer measurement noise standard deviation.
+    // #0.2   0.04
+    fs << std::string( "acc_n_y" ) << acc_y.getWhiteNoise( ); // << "        # accelerometer measurement noise standard deviation.";
+    // acc_n_y: 0.004327787331424608          # accelerometer measurement noise standard
+    // #deviation. #0.2   0.04
+    fs << std::string( "acc_n_z" ) << acc_z.getWhiteNoise( ); // << "        # accelerometer measurement noise standard deviation.";
+    // acc_n_z: 0.021303276863359345          # accelerometer measurement noise standard
+    // #deviation. #0.2   0.04
+
+    fs << std::string( "gyr_n_x" ) << gyr_x.getWhiteNoise( ); // << "        # gyroscope measurement noise standard deviation.";
+    // gyr_n_x: 0.0004186755718965982        # gyroscope measurement noise standard deviation.
+    // #0.05  0.004
+    fs << std::string( "gyr_n_y" ) << gyr_y.getWhiteNoise( ); // << "        # gyroscope measurement noise standard deviation.";
+    // gyr_n_y: 0.00028970010287345557         # gyroscope measurement noise standard deviation.
+    // #0.05  0.004
+    fs << std::string( "gyr_n_z" ) << gyr_z.getWhiteNoise( ); // << "        # gyroscope measurement noise standard deviation.";
+    // gyr_n_z: 0.0003075323458802833         # gyroscope measurement noise standard deviation.
+    // #0.05  0.004
+
+    fs << std::string( "acc_w_x" ) << acc_x.getBiasInstability( ); // << "         # accelerometer bias random work noise standard";
+    // acc_w_x: 5.166484095411335e-05         # accelerometer bias random work noise standard
+    // #deviation.  #0.02
+    fs << std::string( "acc_w_y" ) << acc_y.getBiasInstability( ); // << "         # accelerometer bias random work noise standard";
+    // acc_w_y: 0.000356921847267702           # accelerometer bias random work noise standard
+    // #deviation.  #0.02
+    fs << std::string( "acc_w_z" ) << acc_z.getBiasInstability( ); // << "         # accelerometer bias random work noise standard";
+    // acc_w_z: 0.0019925496902895396         # accelerometer bias random work noise standard
+    // #deviation.  #0.02
+
+    fs << std::string( "gyr_w_x" ) << gyr_x.getBiasInstability( ); // << "         # gyroscope bias random work noise standard";
+    // gyr_w_x: 7.718188221806838e-06      # gyroscope bias random work noise standard
+    // #deviation.     #4.0e-5
+    fs << std::string( "gyr_w_y" ) << gyr_y.getBiasInstability( ); // << "         # gyroscope bias random work noise standard";
+    // gyr_w_y: 1.0519126742078963e-05      # gyroscope bias random work noise standard
+    // #deviation.     #4.0e-5
+    fs << std::string( "gyr_w_z" ) << gyr_z.getBiasInstability( ); // << "         # gyroscope bias random work noise standard";
+    // gyr_w_z: 2.4937880081140838e-06       # gyroscope bias random work noise standard
+    // #deviation.     #4.0e-5
+
+    // fs << "Gyr";
+    // fs << "{";
+    // fs << "unit"
+    //    << " rad/s";
+
+    // fs << "avg-axis";
+    // fs << "{";
+    // fs << std::string( "gyr_n" )
+    //    << ( gyr_x.getWhiteNoise( ) + gyr_y.getWhiteNoise( ) + gyr_z.getWhiteNoise( ) ) / 3;
+    // fs << std::string( "gyr_w" )
+    //    << ( gyr_x.getBiasInstability( ) + gyr_y.getBiasInstability( ) + gyr_z.getBiasInstability( ) ) / 3;
+
+    // fs << "}";
+
+    // fs << "x-axis";
+    // fs << "{";
+    // fs << std::string( "gyr_n" ) << gyr_x.getWhiteNoise( );
+    // fs << std::string( "gyr_w" ) << gyr_x.getBiasInstability( );
+    // fs << "}";
+
+    // fs << "y-axis";
+    // fs << "{";
+    // fs << std::string( "gyr_n" ) << gyr_y.getWhiteNoise( );
+    // fs << std::string( "gyr_w" ) << gyr_y.getBiasInstability( );
+    // fs << "}";
+
+    // fs << "z-axis";
+    // fs << "{";
+    // fs << std::string( "gyr_n" ) << gyr_z.getWhiteNoise( );
+    // fs << std::string( "gyr_w" ) << gyr_z.getBiasInstability( );
+    // fs << "}";
+
+    // fs << "}";
+
+    // fs << "Acc";
+    // fs << "{";
+    // fs << "unit"
+    //    << " m/s^2";
+
+    // fs << "avg-axis";
+    // fs << "{";
+    // fs << std::string( "acc_n" )
+    //    << ( acc_x.getWhiteNoise( ) + acc_y.getWhiteNoise( ) + acc_z.getWhiteNoise( ) ) / 3;
+    // fs << std::string( "acc_w" )
+    //    << ( acc_x.getBiasInstability( ) + acc_y.getBiasInstability( ) + acc_z.getBiasInstability( ) ) / 3;
+    // fs << "}";
+
+    // fs << "x-axis";
+    // fs << "{";
+    // fs << std::string( "acc_n" ) << acc_x.getWhiteNoise( );
+    // fs << std::string( "acc_w" ) << acc_x.getBiasInstability( );
+    // fs << "}";
+
+    // fs << "y-axis";
+    // fs << "{";
+    // fs << std::string( "acc_n" ) << acc_y.getWhiteNoise( );
+    // fs << std::string( "acc_w" ) << acc_y.getBiasInstability( );
+    // fs << "}";
+
+    // fs << "z-axis";
+    // fs << "{";
+    // fs << std::string( "acc_n" ) << acc_z.getWhiteNoise( );
+    // fs << std::string( "acc_w" ) << acc_z.getBiasInstability( );
+    // fs << "}";
+
+    // fs << "}";
+
+    fs.release( );
+}
+
 int
 main( int argc, char** argv )
 {
@@ -321,6 +460,7 @@ main( int argc, char** argv )
     writeData3( IMU_NAME + "_acc", acc_ts_x, acc_d_x, acc_d_y, acc_d_z );
 
     writeYAML( data_save_path, IMU_NAME, fit_gyr_x, fit_gyr_y, fit_gyr_z, fit_acc_x, fit_acc_y, fit_acc_z );
+    writeYAMLCB( data_save_path, IMU_NAME, fit_gyr_x, fit_gyr_y, fit_gyr_z, fit_acc_x, fit_acc_y, fit_acc_z );
 
     return 0;
 }
