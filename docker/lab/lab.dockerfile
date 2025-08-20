@@ -34,8 +34,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install ROS
-RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu`lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list' && \
-    curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - && \
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | gpg --dearmor -o /usr/share/keyrings/ros-archive-keyring.gpg && \
+    sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros-latest.list' && \
     apt-get update && \
     apt-get install -y \
     ros-${ROS_VERSION}-ros-base \
@@ -52,7 +52,6 @@ RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu`lsb_release -cs` main" >
     python3-rosinstall \
     python3-rosinstall-generator \
     python3-wstool \
-    python3-rosdep \
     python3-catkin-tools && \
     apt-get clean && \
     rosdep init && \
@@ -77,7 +76,7 @@ RUN apt-get update && \
 # Install pip dependencies
 RUN apt-get update && \
     apt-get install -y \
-    python3-pip \ 
+    python3-pip \
     ros-${ROS_VERSION}-rviz-imu-plugin \
     ros-${ROS_VERSION}-serial && \
     apt-get clean && \
